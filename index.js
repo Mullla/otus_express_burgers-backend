@@ -1,5 +1,5 @@
 import express from 'express';
-import bodyParser from 'body-parser';
+import cors from 'cors';
 import mongoose from 'mongoose';
 import router from './router.js';
 
@@ -22,6 +22,7 @@ async function startApp() {
   }
 }
 
+app.use(cors());
 app.use(express.json());
 app.use('/', router);
 
