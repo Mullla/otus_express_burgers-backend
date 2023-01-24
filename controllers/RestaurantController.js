@@ -1,4 +1,5 @@
 import Restaurant from '../models/Restaurant.js';
+import Burger from '../models/Burger.js';
 
 class RestaurantController {
   async create(req, res) {
@@ -7,6 +8,25 @@ class RestaurantController {
       const restaurant = await Restaurant.create({
         name, address, menu
       });
+
+      const burgers = await Burger.find()
+
+      const burgersToUpdate = [];
+      menu.forEach(burgerId => {
+        burgersToUpdate.push(burgers.find(burger => burger._id.toString() === burgerId));
+      });
+
+      burgersToUpdate.forEach(burger => {
+        burger.restaurants.push(restaurant._id)
+      });
+
+      burgersToUpdate.forEach( async (burger) => {
+        await Burger.findByIdAndUpdate(burger._id, burger, {
+          new: true,
+        })
+      }
+      )
+
       res.json(restaurant);
     } catch (error) {
       res.status(500).json(error);
